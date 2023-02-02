@@ -11,15 +11,14 @@ SPIClass vspi;
 #define HSPI_MISO 12
 #define HSPI_SCK 14
 
-void spiCommand(SPIClass &spi, byte data, int CS)
+byte spiCommand(SPIClass &spi, byte data, int CS)
 {
     spi.beginTransaction(SPISettings(spiClk, MSBFIRST, SPI_MODE0));
     digitalWrite(SS, LOW); // assume SS pin is connected to digital pin 10
     byte spiResponse = spi.transfer(data);
     digitalWrite(SS, HIGH);
-    Serial.print("SPI Response: ");
-    Serial.println(spiResponse, BIN);
     spi.endTransaction();
+    return spiResponse;
 }
 
 void setup()
@@ -33,6 +32,8 @@ void setup()
 void loop()
 {
     byte data = 0x12;
-    spiCommand(hspi, data, HSPI_CS);
+    byte response = spiCommand(hspi, data, HSPI_CS);
+    Serial.print("spi response: ");
+    Serial.println(response, BIN);
     delay(100);
 }
