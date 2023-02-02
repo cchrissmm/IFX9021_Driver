@@ -130,6 +130,18 @@ void serialRX()
            // readConfig();
            // readRevision();
         }
+        if (str.startsWith("READCONF"))
+        {
+            // readDiag();
+            readConfig();
+            // readRevision();
+        }
+        if (str.startsWith("READREV"))
+        {
+            // readDiag();
+            //readConfig();
+            readRevision();
+        }
     }
 }
 
