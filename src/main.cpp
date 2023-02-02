@@ -11,14 +11,38 @@ SPIClass vspi;
 #define HSPI_MISO 12
 #define HSPI_SCK 14
 
+#define READ_DIA 0b00000000
+#define READ_REV 0b00100000
+
 byte spiCommand(SPIClass &spi, byte data, int CS)
 {
     spi.beginTransaction(SPISettings(spiClk, MSBFIRST, SPI_MODE0));
-    digitalWrite(SS, LOW); // assume SS pin is connected to digital pin 10
+    digitalWrite(CS, LOW); 
     byte spiResponse = spi.transfer(data);
-    digitalWrite(SS, HIGH);
+    digitalWrite(CS, HIGH);
     spi.endTransaction();
     return spiResponse;
+}
+
+void serialRX()
+{
+    if (Serial.available())
+    {
+        String str = Serial.readStringUntil('\n');
+
+        if (str.startsWith("READDIA"))
+        {
+            byte response = spiCommand(hspi, READ_DIA, HSPI_CS);
+            Serial.print("spi response: ");
+            Serial.println(response, BIN);
+        }
+        if (str.startsWith("READREV"))
+        {
+            byte response = spiCommand(hspi, READ_REV, HSPI_CS);
+            Serial.print("spi response: ");
+            Serial.println(response, BIN);
+        }
+    }
 }
 
 void setup()
@@ -31,8 +55,8 @@ void setup()
 
 void loop()
 {
-    byte data = 0x12;
-    byte response = spiCommand(hspi, data, HSPI_CS);
+    serialRX();
+    byte response = spiCommand(hspi, READ_DIA, HSPI_CS);
     Serial.print("spi response: ");
     Serial.println(response, BIN);
     delay(100);
