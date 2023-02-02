@@ -17,7 +17,7 @@ Connect the spi pins on the IFX9021 to the ESP32. The default pins are as follow
 | 12    | MISO        | SO           | 3             |
 | 15    | CS          | CSN          | 9             |
 
-!!Remember to also connect the ship to its supply voltage, 12V in this case.
+!!Remember to also connect the ship to its supply voltage to pin 4, 12V in this case.
 
 The ESP32 pins can be changed. Multiple chips can be used, each gets its own CS pin.
 

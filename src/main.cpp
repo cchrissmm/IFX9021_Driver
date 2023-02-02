@@ -45,6 +45,8 @@ void serialRX()
     }
 }
 
+
+
 void setup()
 {
     Serial.begin(115200);
@@ -57,7 +59,33 @@ void loop()
 {
     serialRX();
     byte response = spiCommand(hspi, READ_DIA, HSPI_CS);
-    Serial.print("spi response: ");
-    Serial.println(response, BIN);
+    Serial.print("spi sent: ");
+    Serial.println(READ_DIA, BIN);
+
+    int responseArray[8]; // Array to store each bit of the binary number
+    int index = 0;       // Index to keep track of the position in the array
+
+    for (int i = 7; i >= 0; i--)
+    {
+        if ((response >> i) & 1)
+        {
+            responseArray[index++] = 1;
+        }
+        else
+        {
+            responseArray[index++] = 0;
+        }
+    }
+
+    Serial.print("EN: " + String(responseArray[0]));
+    Serial.print(" OT: " + String(responseArray[1]));
+    Serial.print(" TV: " + String(responseArray[2]));
+    Serial.print(" CL: " + String(responseArray[3]));
+    Serial.print(" DIA4: " + String(responseArray[4]));
+    Serial.print(" DIA3: " + String(responseArray[5]));
+    Serial.print(" DIA2: " + String(responseArray[6]));
+    Serial.print(" DIA1: " + String(responseArray[7]));
+
+    Serial.println();
     delay(100);
 }
